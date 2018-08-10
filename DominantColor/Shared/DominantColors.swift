@@ -152,6 +152,9 @@ public func dominantColorsInImage(
     // Sort the clusters by size in descending order so that the
     // most dominant colors come first.
     clusters.sort { $0.size > $1.size }
+    for c in clusters {
+        print(c.size)
+    }
     
     return clusters.map { RGBVectorToCGColor(IN_LABToRGB($0.centroid)) }
 }

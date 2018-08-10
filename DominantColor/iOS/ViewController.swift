@@ -16,6 +16,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     var image: UIImage!
 
+    override func viewDidLoad() {
+        for box in boxes {
+            box.layer.cornerRadius = box.frame.size.width/2
+            box.clipsToBounds = true
+            box.layer.borderColor = UIColor.gray.cgColor
+            box.layer.borderWidth = 4.0
+        }
+    }
+
     // MARK: IBActions
     
     @IBAction func selectImage(_ sender: AnyObject) {
@@ -26,13 +35,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.present(imagePickerController, animated: true, completion: nil)
     }
     
-    @IBAction func runBenchmarkTapped(sender: AnyObject) {
+    @IBAction func runBenchmarkTapped(_ sender: UIButton) {
         if let image = image {
             let nValues: [Int] = [100, 1000, 2000, 5000, 10000]
             let CGImage = image.cgImage
             for n in nValues {
                 let ns = dispatch_benchmark(5) {
-                    dominantColorsInImage(CGImage!, maxSampledPixels: n)
+                    _ = dominantColorsInImage(CGImage!, maxSampledPixels: n)
                     return
                 }
                 print("n = \(n) averaged \(ns/1000000) ms")
@@ -50,6 +59,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let colors = image.dominantColors()
             for box in boxes {
                 box.backgroundColor = UIColor.clear
+                box.layer.cornerRadius = box.frame.size.width/2
+                box.clipsToBounds = true
             }
             for i in 0..<min(colors.count, boxes.count) {
                 boxes[i].backgroundColor = colors[i]
